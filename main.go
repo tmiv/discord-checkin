@@ -154,7 +154,12 @@ func DiscordLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if tok_resp.StatusCode < 200 || tok_resp.StatusCode >= 300 {
-		log.Printf("Error Bad Response %d", tok_resp.StatusCode)
+		log.Printf("Error Bad Response %d\n", tok_resp.StatusCode)
+		resp, err := io.ReadAll(tok_resp.Body)
+		if err == nil {
+			log.Printf("Response %s\n", resp)
+		}
+		tok_resp.Body.Close()
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
