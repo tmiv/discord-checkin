@@ -228,8 +228,13 @@ func DiscordLogin(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	log.Printf("URL: %s?token=%s\n", RedirectURI, string(niv_tok))
-	http.Redirect(w, r, RedirectURI+"?token="+string(niv_tok), http.StatusSeeOther)
+	if len(RedirectURI) > 0 {
+		log.Printf("URL: %s?token=%s\n", RedirectURI, string(niv_tok))
+		http.Redirect(w, r, RedirectURI+"?token="+string(niv_tok), http.StatusSeeOther)
+	} else {
+		w.Header().Set("Content-Type", "text/plain")
+    		w.Write(niv_tok)
+	}
 }
 
 func main() {
